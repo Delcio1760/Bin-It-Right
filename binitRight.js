@@ -32,6 +32,14 @@ let ratoX = -150;
 let ratoY = 680;
 let frameIndex = 0;
 
+// Imagem do gato (sprite)
+const gatoImg = new Image();
+gatoImg.src = './Images/cat.png'; // Imagem do gato
+
+let gatoX = -300;
+let gatoY = 675;
+let gatoFrameIndex = 0;
+
 function Desenhar(){
     // desenhar fundo
     ctx.drawImage(backgroundImage, 0,0,canvas.width,canvas.height);
@@ -50,15 +58,39 @@ function Desenhar(){
 
     if(ratoX > 1100){
         ratoX = -150; // Se sair do ecrã, volta ao inicio
+        gatoX = -300; // Reiniciar posição do gato quando o rato sair do ecrã
     }
 
     frameIndex++;
     if(frameIndex == 6){
         frameIndex = 0; // reiniciar animação do rato
     }   
+
+    // Aqui desenhamos o gato
+
+    ctx.drawImage(gatoImg, gatoFrameIndex * 88,0,88,38, gatoX, gatoY,139,60);
+    gatoX = gatoX +40; // velocidade do gato
+
+    if(gatoX > 1100){
+        gatoX = -130; // Ao chegar ao fim do ecrã, volta ao inicio
+    }
+
+    gatoFrameIndex++;
+    if(gatoFrameIndex == 6){
+        gatoFrameIndex = 0;      // Reniciar a animação do gato
+    }
+
 }
 
-// Esperar imagens carregarem antes de desenhar
-ratoImg.onload = function(){setInterval(Desenhar, 1000/14)}; // Desenhar a 12 fps
+// Aqui verificamos se as imagens estão carregadas
 
+let imagensCarregadas = 0;              
+function verificarCarregamento(){
+    imagensCarregadas ++;           // Contador de imagens carregadas
+    if (imagensCarregadas == 2){       // Aqui verificamos se as 2 imagens (rato e gato) estão carregadas se estiverem, começamos a desenhar
+        setInterval(Desenhar, 1000/14)  // Velocidade de frames por segundo
+    }
+}
 
+ratoImg.onload = verificarCarregamento; 
+gatoImg.onload = verificarCarregamento;
